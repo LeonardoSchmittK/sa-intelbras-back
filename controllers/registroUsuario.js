@@ -1,5 +1,5 @@
-// Simulação de funções do banco de dados
-const userDatabase = [];
+const bcrypt = require('bcrypt');
+const User = require('../models/User'); // Importe o modelo de usuário
 
 const userController = {
   // Função para registrar um usuário
@@ -12,33 +12,36 @@ const userController = {
         return res.status(400).json({ message: "Todos os campos são obrigatórios." });
       }
 
-      // Simulação de verificação de e-mail único
-      const emailExists = userDatabase.some(user => user.email === email);
+      // Verificar se o e-mail já está cadastrado
+      const emailExists = await User.findOne({ where: { email } });
       if (emailExists) {
         return res.status(400).json({ message: "E-mail já cadastrado." });
       }
 
-      // Simulação de criação de usuário
-      const newUser = {
-        id: userDatabase.length + 1,
-        fullName,
+      // Criptografar a senha
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Criar o novo usuário no banco de dados
+      const newUser = await User.create({
+        username: fullName, // Assume que fullName é o nome de usuário
         phone,
         email,
-        password, // Idealmente, você deve criptografar a senha.
-      };
+        password: hashedPassword,
+      });
 
-      userDatabase.push(newUser);
-
-      return res.status(201).json({ message: "Usuário registrado com sucesso.", user: newUser });
+      // Retornar a resposta com os dados do usuário sem a senha
+      return res.status(201).json({ message: "Usuário registrado com sucesso.", user: { ...newUser.dataValues, password: undefined } });
     } catch (error) {
       return res.status(500).json({ message: "Erro no servidor.", error: error.message });
     }
   },
 
-  // Função para listar todos os usuários (opcional)
+  // Função para listar todos os usuários
   async listUsers(req, res) {
     try {
-      return res.status(200).json(userDatabase);
+      // Obter todos os usuários, sem a senha
+      const users = await User.findAll();
+      return res.status(200).json(users.map(user => ({ ...user.dataValues, password: undefined })));
     } catch (error) {
       return res.status(500).json({ message: "Erro no servidor.", error: error.message });
     }
