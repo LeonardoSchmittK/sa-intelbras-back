@@ -110,6 +110,20 @@ const login = async (req, res) => {
 };
 
 
-module.exports = { signUp, login, getAllUsers,authenticate };
+const logout = async (req, res) => {
+
+  const token = req.headers['authorization']?.split(' ')[1]; 
+
+  if (token){
+
+    res.cookie('jwtToken', '', { maxAge: 0, httpOnly: true, path: '/' });
+
+    return res.send('Logout realizado com sucesso. Token removido.');
+  } else {
+    return res.status(400).send('Token não fornecido.');
+  }
+};
+
+module.exports = { signUp, login, getAllUsers,authenticate, logout};
 
 
