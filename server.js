@@ -54,7 +54,7 @@ const cors = require("cors");
       app.use('/products', productsRoutes);
       app.use('/users', userRoutes);
 
-      app.listen(PORT, "0.0.0.0", () => {
+      app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
       });
 
