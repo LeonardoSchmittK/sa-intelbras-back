@@ -1,4 +1,4 @@
-const Product = require('../models/Product'); // Model pra conectar no db
+const Product = require('../models/Product.js'); // Model pra conectar no db
 
 // Criar produto
 const createProduct = async (req, res) => {
