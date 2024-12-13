@@ -1,8 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const productsRoutes = require('./routes/productRoutes');
-const userRoutes = require('./routes/userRoutes');
+const productsRoutes = require('./routes/productRoutes.js');
+const userRoutes = require('./routes/userRoutes.js');
 
 // db
 const sequelize = require('./db/sequelize.js'); 
@@ -54,7 +54,7 @@ const cors = require("cors");
       app.use('/products', productsRoutes);
       app.use('/users', userRoutes);
 
-      app.listen(PORT, () => {
+      app.listen(PORT, "0.0.0.0", () => {
         console.log(`Server is running on http://localhost:${PORT}`);
       });
 
