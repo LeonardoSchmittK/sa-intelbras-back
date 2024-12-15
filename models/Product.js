@@ -23,7 +23,11 @@ const Product = sequelize.define('Product', {
       model: Category,
       key: 'id',
     },
-  },
+    
+  },  imageUrl: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  }
 }, {
   tableName: 'products',
   timestamps: true,
