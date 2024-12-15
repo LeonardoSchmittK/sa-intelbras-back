@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 
 const productsRoutes = require('./routes/productRoutes.js');
 const userRoutes = require('./routes/userRoutes.js');
+const categoryRoutes = require('./routes/categoryRoutes.js');
 
 // db
 const sequelize = require('./db/sequelize.js'); 
@@ -22,7 +23,7 @@ const cors = require("cors");
       const PORT = 3000;
 
       app.use(bodyParser.json());
-
+      express.urlencoded({ extended: true })
 
     
       const allowedOrigins = [
@@ -53,6 +54,7 @@ const cors = require("cors");
     // Rotas
       app.use('/products', productsRoutes);
       app.use('/users', userRoutes);
+      app.use('/categories', categoryRoutes);
 
       app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
