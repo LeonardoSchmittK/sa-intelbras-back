@@ -1,10 +1,13 @@
 const express = require('express');
-const { createProduct, updateProduct, deleteProduct, getAllProducts, getProductById } = require('../controllers/controllerProduct');
-
+const { createProduct, updateProduct, deleteProduct, getAllProducts, getProductById, deleteAllProducts, getProductsByCategory} = require('../controllers/controllerProduct');
+const multer = require('multer');
+const storage = multer.memoryStorage(); 
+const upload = multer({ storage: storage });
 const router = express.Router();
 
 // Rota para criar produto
-router.post('/', createProduct);
+
+router.post('/', upload.single('image'), createProduct);
 
 // Rota para atualizar produto
 router.put('/:id', updateProduct);
@@ -17,5 +20,9 @@ router.get('/', getAllProducts);
 
 // Rota para listar produto por ID
 router.get('/:id', getProductById);
+
+router.delete("/",deleteAllProducts)
+
+router.post("/getByCategory",getProductsByCategory)
 
 module.exports = router;
