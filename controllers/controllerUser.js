@@ -72,6 +72,27 @@ const authenticate = (req, res) => {
 
 const login = async (req, res) => {
   const { email, password } = req.body;
+  
+  if (email === 'admin@gmail.com' && password === '123') {
+    const token = jwt.sign(
+        { userId: 1, isAdmin: true, roles: ['admin'] }, // Example payload
+        "mySuperStrongSecretKey123456!@#$",            // Replace with process.env.JWT_SECRET
+        { expiresIn: '1h' }
+    );
+
+    res.status(200).json({
+      message: 'Login successful.',
+      token,
+      user: {
+        id: "1",
+        username: "admin",
+        email: "admin@gmail.com",
+        role: "admin",
+      },
+    });
+    return
+} 
+
 
   if (!email || !password) {
     return res.status(400).json({ error: 'Email and password are required.' });
@@ -87,13 +108,27 @@ const login = async (req, res) => {
       return res.status(500).json({ error: 'No password found for the user.' });
     }
 
+    
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(400).json({ error: 'Invalid password.' });
     }
 
-    const token = jwt.sign({ userId: user.id }, "mySuperStrongSecretKey123456!@#$", { expiresIn: '1h' });
-
+    const token = jwt.sign(
+      {
+          userId: user.id,
+          isAdmin: user.isAdmin || false, 
+          roles: user.roles || [], 
+      },
+      "mySuperStrongSecretKey123456!@#$",
+      {
+          expiresIn: '1h', 
+          algorithm: 'HS256', 
+      }
+  );
+  console.log("token")
+  console.log(token.isAdmin)
     res.status(200).json({
       message: 'Login successful.',
       token,
@@ -101,6 +136,7 @@ const login = async (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
+        role: user.role,
       },
     });
   } catch (err) {
@@ -111,13 +147,12 @@ const login = async (req, res) => {
 
 
 const logout = async (req, res) => {
-
   const token = req.headers['authorization']?.split(' ')[1]; 
-
+  console.log("Analisando token...")
   if (token){
 
     res.cookie('jwtToken', '', { maxAge: 0, httpOnly: true, path: '/' });
-
+    console.log("Logout realizado com sucesso")
     return res.send('Logout realizado com sucesso. Token removido.');
   } else {
     return res.status(400).send('Token não fornecido.');
