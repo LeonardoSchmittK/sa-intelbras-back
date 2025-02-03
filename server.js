@@ -31,7 +31,7 @@ const cors = require("cors");
         'http://127.0.0.1:5501',
         'http://localhost:3000',
         'https://sa-intelbras-api.onrender.com',
-        'https://sa-intelbras-back-2.onrender.com',
+        'https://sa-intelbras-back-3.onrender.com',
         'https://main.d63kzttoveint.amplifyapp.com',
       ];
       
