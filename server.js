@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const productsRoutes = require('./routes/productRoutes.js');
 const userRoutes = require('./routes/userRoutes.js');
 const categoryRoutes = require('./routes/categoryRoutes.js');
-
+const PORT = process.env.PORT || 3000;
 // db
 const sequelize = require('./db/sequelize.js'); 
 
@@ -20,7 +20,6 @@ const cors = require("cors");
       console.log('\n------- Modelos sincronizados com o banco de dados! -------\n');
 
       const app = express();
-      const PORT = 3000;
 
       app.use(bodyParser.json());
       express.urlencoded({ extended: true })
